@@ -1,0 +1,6 @@
+#GET http://localhost:8081/feign/local
+GET http://localhost:8081/feign/test
+#GET http://localhost:8081/actuator/env
+Accept: application/json
+
+###

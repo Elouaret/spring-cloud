@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: item-service
+  profiles:
+    active: development
+  config:
+    import: "optional:configserver:http://root:admin@localhost:8080"
