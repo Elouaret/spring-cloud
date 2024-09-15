@@ -4,11 +4,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
-//@Data
-//@Component
-//@ConfigurationProperties("app.conf")
-//@RefreshScope
+@Component
+@ConfigurationProperties(prefix = "user")
+@RefreshScope
 public class ApplicationPropertiesConfiguration
 {
-    private int valeur;
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

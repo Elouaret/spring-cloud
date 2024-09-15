@@ -1,4 +1,2 @@
-POST http://localhost:8084/actuator/refresh
+POST http://localhost:8100/actuator/refresh
 #Accept: application/vnd.spring-boot.actuator.v3+json
-
-{}

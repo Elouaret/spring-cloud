@@ -1,5 +1,6 @@
 package ch.ge.apside.archi.gateway.router;
 
+import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,37 +12,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GatewayRouter {
 
-    @Value("${cart.service.url}")
-    private String cartServiceUrl;
+    @Value("${cart.service.name}")
+    private String cartServiceName;
 
-    @Value("${item.service.url}")
-    private String itemServiceUrl;
+    @Value("${item.service.name}")
+    private String itemServiceName;
 
-//    private static final String CART_SERVICE_NAME = "cart-service";
-//    private static final String ITEM_SERVICE_NAME = "item-service";
-
-    @Autowired
-    private EurekaClient eurekaClient;
-
-//    public String getCartServiceUrl() {
-//        InstanceInfo cartService = eurekaClient
-//                .getApplication(CART_SERVICE_NAME)
-//                .getInstances()
-//                .get(0);
-//        String cartServiceHostName = cartService.getHostName();
-//        int port = cartService.getPort();
-//        return "http://" + cartServiceHostName + ":" + port + "/";
-//    }
-//
-//    public String getItemServiceUrl() {
-//        InstanceInfo itemService = eurekaClient
-//                .getApplication(ITEM_SERVICE_NAME)
-//                .getInstances()
-//                .get(0);
-//        String itemServiceHostName = itemService.getHostName();
-//        int port = itemService.getPort();
-//        return "http://" + itemServiceHostName + ":" + port + "/";
-//    }
 
     @Bean
     public RouteLocator myRoutes(RouteLocatorBuilder builder) {

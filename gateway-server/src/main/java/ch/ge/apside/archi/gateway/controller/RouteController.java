@@ -46,8 +46,33 @@ public class RouteController {
         return "page-view";
     }
 
+
+    private static final String CART_SERVICE_NAME = "cart-service";
+    private static final String ITEM_SERVICE_NAME = "item-service";
+
+    public String getCartServiceUrl() {
+        InstanceInfo cartService = eurekaClient
+                .getApplication(CART_SERVICE_NAME)
+                .getInstances()
+                .get(0);
+        String cartServiceHostName = cartService.getHostName();
+        int port = cartService.getPort();
+        return "http://" + cartServiceHostName + ":" + port + "/";
+    }
+
+    public String getItemServiceUrl() {
+        InstanceInfo itemService = eurekaClient
+                .getApplication(ITEM_SERVICE_NAME)
+                .getInstances()
+                .get(0);
+        String itemServiceHostName = itemService.getHostName();
+        int port = itemService.getPort();
+        return "http://" + itemServiceHostName + ":" + port + "/";
+    }
+
     @GetMapping("/")
     public String index() {
+        String cartServiceUrl = getCartServiceUrl();
         return String.format("Index from '%s'!", eurekaClient.getApplication(appName).getName());
     }
 

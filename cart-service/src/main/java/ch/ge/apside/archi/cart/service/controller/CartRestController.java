@@ -1,5 +1,7 @@
 package ch.ge.apside.archi.cart.service.controller;
 
+import ch.ge.apside.archi.cart.service.configuration.ApplicationPropertiesConfiguration;
+import ch.ge.apside.archi.cart.service.configuration.ValueRefreshConfigBean;
 import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,12 @@ public class CartRestController {
     @Lazy
     private EurekaClient eurekaClient;
 
+    @Autowired
+    private ApplicationPropertiesConfiguration applicationPropertiesConfiguration;
+
+    @Autowired
+    private ValueRefreshConfigBean valueRefreshConfigBean;
+
     @Value("${spring.application.name}")
     private String appName;
 
@@ -38,7 +46,14 @@ public class CartRestController {
 
     @GetMapping("/role")
     public String role() {
-        return String.format("Role : '%s'", role);
+//        return String.format("Role : '%s'", role);
+        StringBuilder sb = new StringBuilder();
+        sb.append("CartRestController. @Value Role:  : " + role);
+        sb.append("\n");
+        sb.append("CartRestController. applicationPropertiesConfiguration @Value Role:  : " + applicationPropertiesConfiguration.getRole());
+        sb.append("\n");
+        sb.append("CartRestController. valueRefreshConfigBean @Value Role:  : " + valueRefreshConfigBean.getRole());
+        return sb.toString();
     }
 
     @Autowired
