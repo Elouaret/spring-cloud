@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("cart")
-@RefreshScope
-@ConfigurationProperties
+//@RestController
+//@RequestMapping("/cart")
+//@RefreshScope
+//@ConfigurationProperties
 public class CartRestController {
 
-    @Autowired
-    @Lazy
+//    @Autowired
+//    @Lazy
     private EurekaClient eurekaClient;
 
-    @Autowired
+//    @Autowired
     private ApplicationPropertiesConfiguration applicationPropertiesConfiguration;
 
-    @Autowired
+//    @Autowired
     private ValueRefreshConfigBean valueRefreshConfigBean;
 
     @Value("${spring.application.name}")
@@ -46,7 +46,6 @@ public class CartRestController {
 
     @GetMapping("/role")
     public String role() {
-//        return String.format("Role : '%s'", role);
         StringBuilder sb = new StringBuilder();
         sb.append("CartRestController. @Value Role:  : " + role);
         sb.append("\n");
@@ -54,14 +53,6 @@ public class CartRestController {
         sb.append("\n");
         sb.append("CartRestController. valueRefreshConfigBean @Value Role:  : " + valueRefreshConfigBean.getRole());
         return sb.toString();
-    }
-
-    @Autowired
-    private ItemClient itemClient;
-
-    @GetMapping("/item")
-    public String item() {
-        return String.format("Item name : '%s'", itemClient.name());
     }
 
 }

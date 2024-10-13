@@ -5,3 +5,9 @@ spring:
     active: development
   config:
     import: "optional:configserver:http://root:admin@localhost:8888"
+
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        cloud: DEBUG

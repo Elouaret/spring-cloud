@@ -1,4 +1,4 @@
-package ch.ge.apside.archi.cart.service.controller;
+package ch.ge.apside.archi.cart.service.controller.client;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 
 @Controller
-public class NoFeignClientController {
+public class EurekaClientController {
 
     private static final String SERVICE_NAME = "client-service";
 
@@ -20,7 +20,7 @@ public class NoFeignClientController {
     private EurekaClient eurekaClient;
 
     @RequestMapping("/get-greeting-no-feign")
-    public String greeting(Model model) {
+    public String withEurekaClientInfos(Model model) {
 
         InstanceInfo service = eurekaClient
                 .getApplication(SERVICE_NAME)

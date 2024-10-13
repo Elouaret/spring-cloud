@@ -1,9 +1,10 @@
 package ch.ge.apside.archi.gateway.router;
 
-import com.netflix.appinfo.InstanceInfo;
-import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.discovery.ReactiveDiscoveryClient;
+import org.springframework.cloud.gateway.discovery.DiscoveryClientRouteDefinitionLocator;
+import org.springframework.cloud.gateway.discovery.DiscoveryLocatorProperties;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -12,47 +13,50 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GatewayRouter {
 
-    @Value("${cart.service.name}")
+//    @Value("${cart.service.name}")
     private String cartServiceName;
-
-    @Value("${item.service.name}")
+//
+//    @Value("${item.service.name}")
     private String itemServiceName;
 
+//    @Autowired
+//    private ServiceIdentifier serviceIdentifier;
 
-    @Bean
+//    @Bean
     public RouteLocator myRoutes(RouteLocatorBuilder builder) {
 
         return builder.routes()
-                .route(p -> p
-                        .path("/item")
+                .route("r1", r -> r.path("/item/**")
                         .filters(f -> f.addRequestHeader("Hello", "World"))
-                        .uri(itemServiceUrl))
-                .route(p -> p
-                        .path("/cart")
+//                        .uri(serviceIdentifier.getItemUri() + "/item"))
+                        .uri("lb://" + itemServiceName))
+                .route("r2", r -> r.path("/cart/**")
                         .filters(f -> f.addRequestHeader("Hello", "World"))
-                        .uri(cartServiceUrl))
+//                        .uri(serviceIdentifier.getCartUri() + "/cart/"))
+//                         .uri("http://localhost:8100/"))
+                        .uri("lb://" + cartServiceName))
 //                .route(p -> p
 //                        .host("*.circuitbreaker.com")
 //                        .filters(f -> f
 //                                .circuitBreaker(config -> config
 //                                        .setName("mycmd")
 //                                        .setFallbackUri("forward:/fallback")))
-//                        .uri(httpUri))
+//                        .uri("circuitbreakerfallback"))
                 .build();
     }
-    /*
-    @Bean
+
+//    @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         //@formatter:off
         return builder.routes()
                 .route(p -> p
-                        .path("/get-item")
+                        .path("/get-item/**")
                         .filters(f -> f.addRequestHeader("Hello", "World"))
-                        .uri("http://localhost:8081/item/"))
+                        .uri("http://localhost:8200"))
                 .route(p -> p
                         .path("/get-cart")
                         .filters(f -> f.addRequestHeader("Hello", "World"))
-                        .uri("http://localhost:8082/cart/"))
+                        .uri("http://localhost:8100/"))
 //                .route("host_route", r -> r.host("*.myhost.org")
 //                        .uri("http://httpbin.org"))
 //                .route("rewrite_route", r -> r.host("*.rewrite.org")
@@ -74,9 +78,14 @@ public class GatewayRouter {
                 .build();
         //@formatter:on
     }
-*/
+
 //    @Bean
 //    RedisRateLimiter redisRateLimiter() {
 //        return new RedisRateLimiter(1, 2);
+//    }
+
+//    @Bean
+//    public DiscoveryClientRouteDefinitionLocator discoveryClientRouteLocator(ReactiveDiscoveryClient discoveryClient, DiscoveryLocatorProperties properties) {
+//        return new DiscoveryClientRouteDefinitionLocator(discoveryClient, properties);
 //    }
 }

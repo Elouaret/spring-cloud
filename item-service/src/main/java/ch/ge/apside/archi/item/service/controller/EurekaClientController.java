@@ -24,6 +24,25 @@ public class EurekaClientController implements NameController {
         return String.format("Index from '%s'!", eurekaClient.getApplication(appName).getName());
     }
 
+    // http://localhost:8090/item-service/item/list
+    @GetMapping("/list")
+    public String list() {
+        String list = """
+                {
+                  id: 1,
+                  name: Téléphone
+                  price: 1000€
+                },
+                {
+                  id: 2,
+                  name: Ecran
+                  price: 500€
+                }
+                """;
+        return list;
+    }
+
+
     @Override
     public String name() {
         return String.format("Name from '%s'!", eurekaClient.getApplication(appName).getName());
