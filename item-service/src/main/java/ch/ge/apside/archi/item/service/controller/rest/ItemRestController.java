@@ -1,5 +1,6 @@
-package ch.ge.apside.archi.item.service.controller;
+package ch.ge.apside.archi.item.service.controller.rest;
 
+import ch.ge.apside.archi.item.service.controller.client.GatewayCartFeignClient;
 import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/item")
-public class EurekaClientController implements NameController {
+public class ItemRestController {
+
+    @Autowired
+    private GatewayCartFeignClient gatewayCartFeignClient;
 
     @Autowired
     @Lazy
@@ -18,6 +22,11 @@ public class EurekaClientController implements NameController {
 
     @Value("${spring.application.name}")
     private String appName;
+
+    @GetMapping("/cartsFeign")
+    public String cartsFeign(){
+        return gatewayCartFeignClient.carts();
+    }
 
     @GetMapping("/")
     public String index() {
@@ -42,8 +51,7 @@ public class EurekaClientController implements NameController {
         return list;
     }
 
-
-    @Override
+    @GetMapping("/name")
     public String name() {
         return String.format("Name from '%s'!", eurekaClient.getApplication(appName).getName());
     }
