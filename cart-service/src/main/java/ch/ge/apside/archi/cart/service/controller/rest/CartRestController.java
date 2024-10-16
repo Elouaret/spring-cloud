@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping("/cart")
 //@RefreshScope
 //@ConfigurationProperties
-public class CartController {
+public class CartRestController {
 
     /********************* FEIGN CLIENT *********************/
 
