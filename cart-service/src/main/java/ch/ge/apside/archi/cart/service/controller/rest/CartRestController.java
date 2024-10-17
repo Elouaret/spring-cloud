@@ -1,31 +1,48 @@
 package ch.ge.apside.archi.cart.service.controller.rest;
 
 import ch.ge.apside.archi.cart.service.configuration.ApplicationPropertiesConfiguration;
-import ch.ge.apside.archi.cart.service.configuration.ValueRefreshConfigBean;
 import ch.ge.apside.archi.cart.service.controller.client.GatewayItemFeignClient;
+import ch.ge.apside.archi.cart.service.model.Cart;
+import ch.ge.apside.archi.cart.service.model.Item;
+import ch.ge.apside.archi.cart.service.model.Property;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
 import com.netflix.discovery.shared.Application;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/cart")
-//@RefreshScope
-//@ConfigurationProperties
+@RefreshScope
+@ConfigurationProperties
 public class CartRestController {
+
+    @Autowired
+    private ApplicationPropertiesConfiguration applicationPropertiesConfiguration;
+
+    @Value("${spring.application.name}")
+    private String appName;
+
+    @Value("${editique.url}")
+    private String editiqueUrl;
 
     /********************* FEIGN CLIENT *********************/
 
@@ -34,10 +51,10 @@ public class CartRestController {
     @Autowired
     private GatewayItemFeignClient gatewayItemFeignClient;
 
-    @GetMapping("/itemsFeign")
-    public String itemsFeign(){
-        return gatewayItemFeignClient.items();
-    }
+//    @GetMapping("/itemsFeign")
+//    public String itemsFeign(){
+//        return gatewayItemFeignClient.items();
+//    }
 
     /********************* FEIGN CLIENT *********************/
 
@@ -100,69 +117,24 @@ public class CartRestController {
 
     /********************* WEB CLIENT *********************/
 
-    @GetMapping("/message")
-    public String message(){
-        return "CART MESSAGE";
-    }
-
-    @GetMapping("")
-    public String empty(){
-        return "CART EMPTY";
-    }
-
     @GetMapping("/")
-    public String slash(){
-        return "CART SLASH";
+    public String index(){
+        return String.format("Index from '%s'!", eurekaClient.getApplication(appName).getName());
     }
 
-    @GetMapping("/list")
-    public String list() {
-        String list = """
-                {
-                  id: 1,
-                  name: Panier 1
-                  price: 10000€
-                },
-                {
-                  id: 2,
-                  name: Panier 2
-                  price: 5000000€
-                }
-                """;
-        return list;
+    @GetMapping(value = "/{id}", produces = { "application/json" })
+    public ResponseEntity<Cart> getCart(@PathVariable Long id) {
+        List<Item> items = gatewayItemFeignClient.items();
+        Cart cart = new Cart(id, items, LocalDate.now());
+        return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 
-    @Autowired
-    private ApplicationPropertiesConfiguration applicationPropertiesConfiguration;
-
-    @Autowired
-    private ValueRefreshConfigBean valueRefreshConfigBean;
-
-    @Value("${spring.application.name}")
-    private String appName;
-
-    @Value("${user.role}")
-    private String role;
-//
-//    @GetMapping("/")
-//    public String index() {
-//        return String.format("Index from '%s'!", eurekaClient.getApplication(appName).getName());
-//    }
-//
-    @GetMapping("/name")
-    public String hello() {
-        return String.format("Name from '%s'!", eurekaClient.getApplication(appName).getName());
-    }
-
-    @GetMapping("/role")
-    public String role() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("CartRestController. @Value Role:  : " + role);
-        sb.append("\n");
-        sb.append("CartRestController. applicationPropertiesConfiguration @Value Role:  : " + applicationPropertiesConfiguration.getRole());
-        sb.append("\n");
-        sb.append("CartRestController. valueRefreshConfigBean @Value Role:  : " + valueRefreshConfigBean.getRole());
-        return sb.toString();
+    @GetMapping(value = "/editique", produces = { "application/json" })
+    public ResponseEntity<List<Property>> editique() {
+        String property = "editiqueUrl";
+        List<Property> roles = List.of(new Property("@Value",property,editiqueUrl),
+                                   new Property("ConfigurationProperties",property,applicationPropertiesConfiguration.getUrl()));
+        return new ResponseEntity<>(roles, HttpStatus.OK);
     }
 
 }

@@ -5,17 +5,15 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "user")
+@ConfigurationProperties(prefix = "editique")
 @RefreshScope
 public class ApplicationPropertiesConfiguration
 {
-    private String role;
-
-    public String getRole() {
-        return role;
+    private String url;
+    public String getUrl() {
+        return url;
     }
-
-    public void setRole(String role) {
-        this.role = role;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

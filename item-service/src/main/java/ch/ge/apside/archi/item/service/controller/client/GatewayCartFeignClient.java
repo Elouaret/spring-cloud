@@ -9,4 +9,3 @@ public interface GatewayCartFeignClient {
     String carts();
 }
 
-//http://localhost:8090/item-service/cart/message
